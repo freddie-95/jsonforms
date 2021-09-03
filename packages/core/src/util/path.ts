@@ -59,7 +59,8 @@ export const toDataPathSegments = (schemaPath: string): string[] => {
   const s = schemaPath
     .replace(/anyOf\/[\d]\//g, '')
     .replace(/allOf\/[\d]\//g, '')
-    .replace(/oneOf\/[\d]\//g, '');
+    .replace(/oneOf\/[\d]\//g, '')
+    .replace(/elements\/[\d]\//g, '')
   const segments = s.split('/');
 
   const startFromRoot = segments[0] === '#' || segments[0] === '';
@@ -80,7 +81,7 @@ export const toDataPath = (schemaPath: string): string => {
 };
 
 export const composeWithUi = (scopableUi: Scopable, path: string): string => {
-  const segments = toDataPathSegments(scopableUi.scope);
+  const segments = toDataPathSegments(scopableUi.scope ? scopableUi.scope : '');
 
   if (isEmpty(segments) && path === undefined) {
     return '';

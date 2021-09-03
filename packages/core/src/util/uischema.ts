@@ -46,6 +46,7 @@ export const iterateSchema = (
   uischema: UISchemaElement,
   toApply: IterateCallback
 ): void => {
+
   if (isEmpty(uischema)) {
     return;
   }

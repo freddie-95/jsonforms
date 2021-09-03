@@ -44,7 +44,8 @@ import { deriveTypes, resolveSchema } from '../util';
  */
 const createLayout = (layoutType: string): Layout => ({
   type: layoutType,
-  elements: []
+  elements: [],
+  scope: ''
 });
 
 /**
@@ -91,7 +92,8 @@ const addLabel = (layout: Layout, labelName: string) => {
       // add label with name
       const label: LabelElement = {
         type: 'Label',
-        text: fixedLabel
+        text: fixedLabel,
+        scope: ''
       };
       layout.elements.push(label);
     }
@@ -149,7 +151,7 @@ const generateUISchema = (
     return controlObject;
   }
 
-  if (currentRef === '#' && types[0] === 'object') {
+  if ((currentRef === '#' && types[0] === 'object') || (types[0] == 'object' && jsonSchema.properties != null)) {
     const layout: Layout = createLayout(layoutType);
     schemaElements.push(layout);
 

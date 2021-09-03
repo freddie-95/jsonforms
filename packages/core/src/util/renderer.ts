@@ -24,7 +24,7 @@
 */
 
 import get from 'lodash/get';
-import { ControlElement, JsonSchema, UISchemaElement } from '../models';
+import {ControlElement, JsonSchema, UISchemaElement} from '../models';
 import union from 'lodash/union';
 import find from 'lodash/find';
 import {
@@ -262,6 +262,8 @@ export interface StatePropsOfRenderer {
    * Instance path the data is written to, in case of a control.
    */
   path: string;
+
+  rootSchema: JsonSchema;
 
   /**
    * All available renderers.
@@ -766,10 +768,14 @@ export const mapStateToLayoutProps = (
 ): LayoutProps => {
   const rootData = getData(state);
   const { uischema } = ownProps;
+  const path = composeWithUi(uischema as ControlElement, ownProps.path);
   const visible: boolean =
     ownProps.visible === undefined || hasShowRule(uischema)
       ? isVisible(ownProps.uischema, rootData, ownProps.path, getAjv(state))
       : ownProps.visible;
+  const rootSchema = getSchema(state);
+
+  const schema = Resolve.schema(ownProps.schema, uischema.scope ? uischema.scope : '');
 
   const data = Resolve.data(rootData, ownProps.path);
   const config = getConfig(state);
@@ -777,7 +783,7 @@ export const mapStateToLayoutProps = (
     state,
     ownProps,
     uischema,
-    undefined, // layouts have no associated schema
+    schema,
     rootData,
     config
   );
@@ -788,10 +794,11 @@ export const mapStateToLayoutProps = (
     cells: ownProps.cells || getCells(state),
     visible,
     enabled,
-    path: ownProps.path,
+    path: path,
     data,
+    rootSchema: rootSchema,
     uischema: ownProps.uischema,
-    schema: ownProps.schema,
+    schema: schema,
     direction: ownProps.direction ?? getDirection(uischema)
   };
 };

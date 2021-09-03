@@ -124,7 +124,7 @@ export interface AndCondition extends ComposableCondition {
 /**
  * Common base interface for any UI schema element.
  */
-export interface UISchemaElement {
+export interface UISchemaElement extends Scopable {
   /**
    * The type of this UI schema element.
    */
@@ -150,6 +150,7 @@ export interface Layout extends UISchemaElement {
    * The child elements of this layout.
    */
   elements: UISchemaElement[];
+
 }
 
 /**
@@ -170,7 +171,7 @@ export interface HorizontalLayout extends Layout {
  * A group resembles a vertical layout, but additionally might have a label.
  * This layout is useful when grouping different elements by a certain criteria.
  */
-export interface GroupLayout extends Layout {
+export interface GroupLayout extends Layout, Scopable {
   type: 'Group';
   /**
    * The label of this group layout.

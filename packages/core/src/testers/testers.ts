@@ -99,11 +99,13 @@ export const schemaSubPathMatches = (
   subPath: string,
   predicate: (schema: JsonSchema) => boolean
 ): Tester => (uischema: UISchemaElement, schema: JsonSchema): boolean => {
+
   if (isEmpty(uischema) || !isControl(uischema)) {
     return false;
   }
   const schemaPath = uischema.scope;
   let currentDataSchema: JsonSchema = schema;
+
   if (hasType(schema, 'object')) {
     currentDataSchema = resolveSchema(schema, schemaPath);
   }

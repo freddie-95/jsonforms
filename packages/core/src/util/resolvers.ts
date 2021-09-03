@@ -71,11 +71,13 @@ export const findAllRefs = (
   result: ReferenceSchemaMap = {},
   resolveTuples = false
 ): ReferenceSchemaMap => {
+
   if (isObjectSchema(schema)) {
     Object.keys(schema.properties).forEach(key =>
       findAllRefs(schema.properties[key], result)
     );
   }
+
   if (isArraySchema(schema)) {
     if (Array.isArray(schema.items)) {
       if (resolveTuples) {
@@ -112,11 +114,14 @@ export const resolveSchema = (
   schemaPath: string,
   rootSchema?: JsonSchema
 ): JsonSchema => {
+
   if (isEmpty(schema)) {
     return undefined;
   }
+
   const validPathSegments = schemaPath.split('/');
   let resultSchema = schema;
+
   for (let i = 0; i < validPathSegments.length; i++) {
     let pathSegment = validPathSegments[i];
     resultSchema =
@@ -133,7 +138,7 @@ export const resolveSchema = (
       const schemas = [].concat(
         resultSchema?.oneOf ?? [],
         resultSchema?.allOf ?? [],
-        resultSchema?.anyOf ?? []
+        resultSchema?.anyOf ?? [],
       );
       for (let item of schemas) {
         curSchema = resolveSchema(item, validPathSegments.slice(i).join('/'));
@@ -180,6 +185,7 @@ function retrieveResolvableSchema(
   // tslint:enable:only-arrow-functions
   const child = resolveSchema(full, reference);
   const allRefs = findAllRefs(child);
+
   const innerSelfReference = allRefs[reference];
   if (innerSelfReference !== undefined) {
     innerSelfReference.$ref = '#';
